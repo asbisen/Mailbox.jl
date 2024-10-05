@@ -180,3 +180,92 @@ function split_multipart(body::String, boundary::String)
     parts = split(body, "--" * boundary)
     return [strip(part) for part in parts[2:end-1]]  # Exclude preamble and epilogue
 end
+
+
+
+# Display methods for Mail and MultipartMail
+"""
+    Base.show(io::IO, mail::Mail)
+
+Display a concise representation of a Mail object.
+
+This method prints a summary of the Mail object, including important headers
+(Date, To, From) if present, the total number of headers, and the size of the
+email body in bytes.
+
+Parameters:
+- `io::IO`: The I/O stream to which the representation is written.
+- `mail::Mail`: The Mail object to be displayed.
+
+Output format:
+Mail(Date="...", To="...", From="..."; X headers, body size: Y bytes)
+
+Where X is the total number of headers and Y is the size of the email body in bytes.
+"""
+function Base.show(io::IO, mail::Mail)
+    print(io, "Mail(")
+
+    # Specific header output
+    important_headers = ["Date", "To", "From"]
+    header_preview = []
+    for header in important_headers
+        if haskey(mail.headers, header)
+            push!(header_preview, "$header=\"$(mail.headers[header])\"")
+        end
+    end
+    print(io, join(header_preview, ", "))
+
+    # Header count
+    if !isempty(header_preview)
+        print(io, "; ")
+    end
+    print(io, "$(length(mail.headers)) headers")
+
+    # Body size indication
+    print(io, ", body size: $(length(mail.body)) bytes")
+
+    print(io, ")")
+end
+
+
+
+"""
+    Base.show(io::IO, mail::MultipartMail)
+
+Display a concise representation of a MultipartMail object.
+
+This method prints a summary of the MultipartMail object, including important headers
+(Date, To, From) if present, the total number of headers, and the number of parts in
+the multipart message.
+
+Parameters:
+- `io::IO`: The I/O stream to which the representation is written.
+- `mail::MultipartMail`: The MultipartMail object to be displayed.
+
+Output format:
+MultipartMail(Date="...", To="...", From="..."; X headers, Y parts)
+
+Where X is the total number of headers and Y is the number of parts in the message.
+"""
+function Base.show(io::IO, mail::MultipartMail)
+    print(io, "MultipartMail(")
+
+    # Specific header output
+    important_headers = ["Date", "To", "From"]
+    header_preview = []
+    for header in important_headers
+        if haskey(mail.headers, header)
+            push!(header_preview, "$header=\"$(mail.headers[header])\"")
+        end
+    end
+    print(io, join(header_preview, ", "))
+
+    # Number of parts
+    if !isempty(header_preview)
+        print(io, "; ")
+    end
+    print(io, "$(length(mail.headers)) headers, $(length(mail.parts)) part")
+    length(mail.parts) != 1 && print(io, "s")
+
+    print(io, ")")
+end
