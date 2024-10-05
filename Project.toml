@@ -1,0 +1,8 @@
+name = "Mailbox"
+uuid = "bc479789-8dd8-4578-9382-f7b940853a50"
+authors = ["Anand Bisen <asbisen@icloud.com>"]
+version = "0.1.0"
+
+[deps]
+Base64 = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
