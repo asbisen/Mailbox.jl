@@ -17,4 +17,6 @@ export MultipartMail,
 include("utils.jl")
 export split_headers_and_body
 
+include("Experimental/Experimental.jl")
+
 end # module Mailbox
